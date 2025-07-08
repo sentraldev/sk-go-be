@@ -1,0 +1,12 @@
+-- +migrate Up
+CREATE TABLE posts (
+    uuid uuid PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    author VARCHAR(100) NOT NULL,
+    date TIMESTAMPTZ NOT NULL,
+    tags TEXT[],
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMPTZ
+);
