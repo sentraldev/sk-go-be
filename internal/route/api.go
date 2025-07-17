@@ -12,6 +12,7 @@ func RegisterAPIRoutes(
 	productHandler *handler.ProductHandler,
 	cartHandler *handler.CartHandler,
 	wishlistHandler *handler.WishlistHandler,
+	discountHandler *handler.DiscountHandler,
 ) {
 	v1 := r.Group("/api/v1")
 

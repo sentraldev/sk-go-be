@@ -18,13 +18,14 @@ func main() {
 	dbConn := db.ConnectDatabase()
 	r := gin.Default()
 
-	userHandler, productHandler, cartHandler, wishlistHandler := SetupHandler(dbConn)
+	userHandler, productHandler, cartHandler, wishlistHandler, discountHandler := SetupHandler(dbConn)
 
 	route.RegisterAPIRoutes(r,
 		userHandler,
 		productHandler,
 		cartHandler,
 		wishlistHandler,
+		discountHandler,
 	)
 
 	if err := r.Run(":8081"); err != nil {
@@ -37,6 +38,7 @@ func SetupHandler(db *gorm.DB) (
 	*handler.ProductHandler,
 	*handler.CartHandler,
 	*handler.WishlistHandler,
+	*handler.DiscountHandler,
 ) {
 	// User
 	userRepo := repository.NewUserRepository(db)
@@ -58,5 +60,10 @@ func SetupHandler(db *gorm.DB) (
 	wishlistService := service.NewWishlistService(wishlistRepo)
 	wishlistHandler := handler.NewWishlistHandler(wishlistService)
 
-	return userHandler, productHandler, cartHandler, wishlistHandler
+	// Discount
+	discountRepo := repository.NewDiscountRepository(db)
+	discountService := service.NewDiscountService(discountRepo)
+	discountHandler := handler.NewDiscountHandler(discountService)
+
+	return userHandler, productHandler, cartHandler, wishlistHandler, discountHandler
 }
