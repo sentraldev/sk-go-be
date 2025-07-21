@@ -29,13 +29,6 @@ func (r *userRepository) GetUserByExternalID(externalID string) (*model.User, er
 	log.Printf("User UID from context: %s", externalID)
 
 	var user model.User
-	var users []model.User
-
-	if err1 := r.db.Find(&users).Error; err1 != nil {
-		return nil, err1
-	}
-
-	log.Printf("Found %d users in the database", len(users))
 
 	err := r.db.Where("external_user_id = ?", externalID).First(&user).Error
 	if err == gorm.ErrRecordNotFound {
