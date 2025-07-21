@@ -25,7 +25,7 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 	return &userRepository{db: db}
 }
 
-func (r *userRepository) GetUserByExteralID(externalID string) (*model.User, error) {
+func (r *userRepository) GetUserByExternalID(externalID string) (*model.User, error) {
 	log.Printf("User UID from context: %s", externalID)
 
 	var user model.User
