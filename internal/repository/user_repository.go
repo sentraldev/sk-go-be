@@ -10,7 +10,7 @@ import (
 // UserRepository handles user data access
 
 type UserRepository interface {
-	GetUserByExteralID(externalID string) (*model.User, error)
+	GetUserByExternalID(externalID string) (*model.User, error)
 	GetUserByUUID(uuid string) (*model.User, error)
 	CreateUser(user *model.User) error
 	GetUserByEmail(email string) (*model.User, error)

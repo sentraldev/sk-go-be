@@ -32,7 +32,7 @@ func (h *UserHandler) GetUser(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
 		return
 	}
-	user, err := h.UserService.GetUserByExteralID(userUid)
+	user, err := h.UserService.GetUserByExternalID(userUid)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
