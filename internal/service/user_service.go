@@ -20,8 +20,8 @@ func NewUserService(repo repository.UserRepository) UserService {
 	return &userService{repo: repo}
 }
 
-func (s *userService) GetUserByExteralID(user_id string) (*model.User, error) {
-	return s.repo.GetUserByExteralID(user_id)
+func (s *userService) GetUserByExternalID(user_id string) (*model.User, error) {
+	return s.repo.GetUserByExternalID(user_id)
 }
 
 func (s *userService) GetUserByUUID(uuid string) (*model.User, error) {
