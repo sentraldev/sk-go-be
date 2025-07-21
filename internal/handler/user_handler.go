@@ -24,3 +24,23 @@ func (h *UserHandler) GetUserByUUID(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, user)
 }
+
+func (h *UserHandler) GetUser(c *gin.Context) {
+	userUid := c.GetString("uid")
+
+	if userUid == "" {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
+		return
+	}
+	user, err := h.UserService.GetUserByExteralID(userUid)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	// If user is not found, return 404
+	if user == nil {
+		c.JSON(http.StatusNotFound, gin.H{"message": "User not found"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": user})
+}

@@ -1,8 +1,15 @@
 package model
 
+import (
+	"github.com/google/uuid"
+)
+
 type User struct {
 	Base
-	Email        string `gorm:"uniqueIndex;not null" json:"email"`
-	PasswordHash string `gorm:"not null"`
-	Role         string `gorm:"not null" json:"role"`
+	UUID           uuid.UUID `gorm:"uniqueIndex;not null" json:"uuid"`
+	ExternalUserID string    `gorm:"uniqueIndex;not null" json:"external_user_id"`
+	Name           string    `gorm:"not null" json:"name"`
+	Phone          string    `gorm:"not null" json:"phone"`
+	Email          string    `gorm:"uniqueIndex;not null" json:"email"`
+	Role           string    `gorm:"not null" json:"role"`
 }

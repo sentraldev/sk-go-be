@@ -24,3 +24,12 @@ func (h *ProductHandler) GetProductByUUID(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, product)
 }
+
+func (h *ProductHandler) GetProducts(c *gin.Context) {
+	products, err := h.ProductService.GetProducts()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": products})
+}

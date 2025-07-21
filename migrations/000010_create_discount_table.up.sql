@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS discounts (
     end_date TIMESTAMP NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL,
     CONSTRAINT fk_product
         FOREIGN KEY (product_uuid)
         REFERENCES products(uuid)

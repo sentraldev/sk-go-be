@@ -6,6 +6,7 @@ import (
 )
 
 type ProductService interface {
+	GetProducts() ([]model.Product, error)
 	GetProductByUUID(uuid string) (*model.Product, error)
 }
 
@@ -15,6 +16,14 @@ type productService struct {
 
 func NewProductService(repo repository.ProductRepository) ProductService {
 	return &productService{repo: repo}
+}
+
+func (s *productService) GetProducts() ([]model.Product, error) {
+	products, err := s.repo.GetProducts()
+	if err != nil {
+		return nil, err
+	}
+	return products, nil
 }
 
 func (s *productService) GetProductByUUID(uuid string) (*model.Product, error) {
