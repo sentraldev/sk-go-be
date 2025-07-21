@@ -8,7 +8,7 @@ import (
 // UserService contains business logic for users
 
 type UserService interface {
-	GetUserByExteralID(user_id string) (*model.User, error)
+	GetUserByExternalID(user_id string) (*model.User, error)
 	GetUserByUUID(uuid string) (*model.User, error)
 }
 
