@@ -69,7 +69,7 @@ func main() {
 	}))
 
 	r.RedirectTrailingSlash = true
-	route.RegisterAPIRoutes(r, *fc,
+	route.RegisterAPIRoutes(r, fc,
 		userHandler,
 		productHandler,
 		cartHandler,
