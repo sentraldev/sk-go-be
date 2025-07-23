@@ -9,7 +9,7 @@ import (
 
 func RegisterAPIRoutes(
 	r *gin.Engine,
-	fc middleware.FirebaseClient,
+	fc *middleware.FirebaseClient,
 	userHandler *handler.UserHandler,
 	productHandler *handler.ProductHandler,
 	cartHandler *handler.CartHandler,
@@ -27,8 +27,8 @@ func RegisterAPIRoutes(
 		SetupProductRoutes(public, *productHandler)
 
 		SetupCartPublicRoutes(public, *cartHandler)
-		SetupAuthRoutes(public, *authHandler, fc)
-		SetupUserRoutes(public, *userHandler, fc)
+		SetupAuthRoutes(public, *authHandler, *fc)
+		SetupUserRoutes(public, *userHandler, *fc)
 	}
 
 	// Admin API routes (should be protected by JWT middleware)
