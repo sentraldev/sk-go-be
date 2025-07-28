@@ -9,6 +9,7 @@ import (
 
 	"sk-go-be/internal/db"
 	"sk-go-be/internal/handler"
+	"sk-go-be/internal/handler/admin"
 	"sk-go-be/internal/middleware"
 	"sk-go-be/internal/repository"
 	"sk-go-be/internal/route"
@@ -69,13 +70,25 @@ func main() {
 	}))
 
 	r.RedirectTrailingSlash = true
-	route.RegisterAPIRoutes(r, fc,
+	route.RegisterPublicAPIRoutes(r, fc,
 		userHandler,
 		productHandler,
 		cartHandler,
 		wishlistHandler,
 		discountHandler,
 		authHandler,
+	)
+
+	categoryHandler := SetupAdminHandler(dbConn, fbApp)
+
+	route.RegisterAdminAPIRoutes(r, fc,
+		userHandler,
+		productHandler,
+		cartHandler,
+		wishlistHandler,
+		discountHandler,
+		authHandler,
+		categoryHandler,
 	)
 
 	if err := r.Run(":8081"); err != nil {
@@ -120,4 +133,13 @@ func SetupHandler(db *gorm.DB, fbApp *firebase.App) (
 	discountHandler := handler.NewDiscountHandler(discountService)
 	return userHandler, productHandler, cartHandler, wishlistHandler, discountHandler, authHandler
 
+}
+
+func SetupAdminHandler(db *gorm.DB, fbApp *firebase.App) *admin.CategoryHandler {
+	// Category
+	categoryRepo := repository.NewCategoryRepository(db)
+	categoryService := service.NewCategoryService(categoryRepo)
+	categoryHandler := admin.NewCategoryHandler(categoryService)
+
+	return categoryHandler
 }

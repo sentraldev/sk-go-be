@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func RegisterAPIRoutes(
+func RegisterPublicAPIRoutes(
 	r *gin.Engine,
 	fc *middleware.FirebaseClient,
 	userHandler *handler.UserHandler,
@@ -30,15 +30,6 @@ func RegisterAPIRoutes(
 		SetupAuthRoutes(public, *authHandler, *fc)
 		SetupUserRoutes(public, *userHandler, *fc)
 	}
-
-	// Admin API routes (should be protected by JWT middleware)
-	admin := v1.Group("/admin")
-	admin.Use(fc.AuthMiddleware())
-	// Add admin endpoints here
-	{
-		SetupCartAdminRoutes(admin, *cartHandler)
-	}
-
 }
 
 func SetupCartPublicRoutes(r *gin.RouterGroup, handler handler.CartHandler) {
