@@ -1,0 +1,1 @@
+ALTER TABLE sub_categories ADD CONSTRAINT IF NOT EXISTS fk_categories FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL;

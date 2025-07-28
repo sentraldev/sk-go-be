@@ -1,0 +1,1 @@
+ALTER TABLE sub_categories DROP CONSTRAINT IF EXISTS fk_categories;
