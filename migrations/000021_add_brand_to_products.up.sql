@@ -1,0 +1,3 @@
+ALTER TABLE products
+ADD COLUMN brand_uuid UUID,
+ADD CONSTRAINT fk_brand FOREIGN KEY (brand_uuid) REFERENCES brands(uuid) ON DELETE SET NULL;

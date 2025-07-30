@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
+	"sk-go-be/internal/config"
 	"sk-go-be/internal/db"
 	"sk-go-be/internal/handler"
-	"sk-go-be/internal/handler/admin"
 	"sk-go-be/internal/middleware"
 	"sk-go-be/internal/repository"
 	"sk-go-be/internal/route"
@@ -55,7 +55,16 @@ func main() {
 
 	fc := middleware.NewFirebaseClient(authClient)
 
-	userHandler, productHandler, cartHandler, wishlistHandler, discountHandler, authHandler := SetupHandler(dbConn, fbApp)
+	config.InitializeFirebaseStorage(opt)
+
+	userHandler,
+		productHandler,
+		cartHandler,
+		wishlistHandler,
+		discountHandler,
+		authHandler,
+		categoryHandler,
+		brandHandler := SetupHandler(dbConn, fbApp)
 
 	allowedOrigins := os.Getenv("CORS_ALLOW_ORIGINS")
 	originsList := strings.Split(allowedOrigins, ",") // Convert string to slice
@@ -70,18 +79,7 @@ func main() {
 	}))
 
 	r.RedirectTrailingSlash = true
-	route.RegisterPublicAPIRoutes(r, fc,
-		userHandler,
-		productHandler,
-		cartHandler,
-		wishlistHandler,
-		discountHandler,
-		authHandler,
-	)
-
-	categoryHandler := SetupAdminHandler(dbConn, fbApp)
-
-	route.RegisterAdminAPIRoutes(r, fc,
+	route.RegisterAPIRoutes(r, fc,
 		userHandler,
 		productHandler,
 		cartHandler,
@@ -89,6 +87,7 @@ func main() {
 		discountHandler,
 		authHandler,
 		categoryHandler,
+		brandHandler,
 	)
 
 	if err := r.Run(":8081"); err != nil {
@@ -103,6 +102,8 @@ func SetupHandler(db *gorm.DB, fbApp *firebase.App) (
 	*handler.WishlistHandler,
 	*handler.DiscountHandler,
 	*handler.AuthHandler,
+	*handler.CategoryHandler,
+	*handler.BrandHandler,
 ) {
 	// User
 	userRepo := repository.NewUserRepository(db)
@@ -112,7 +113,7 @@ func SetupHandler(db *gorm.DB, fbApp *firebase.App) (
 	// Product
 	productRepo := repository.NewProductRepository(db)
 	productService := service.NewProductService(productRepo)
-	productHandler := handler.NewProductHandler(productService)
+	productHandler := handler.NewProductHandler(productService, *config.SC)
 
 	authService := service.NewAuthService(userRepo, fbApp)
 	authHandler := handler.NewAuthHandler(authService)
@@ -131,15 +132,16 @@ func SetupHandler(db *gorm.DB, fbApp *firebase.App) (
 	discountRepo := repository.NewDiscountRepository(db)
 	discountService := service.NewDiscountService(discountRepo)
 	discountHandler := handler.NewDiscountHandler(discountService)
-	return userHandler, productHandler, cartHandler, wishlistHandler, discountHandler, authHandler
 
-}
-
-func SetupAdminHandler(db *gorm.DB, fbApp *firebase.App) *admin.CategoryHandler {
 	// Category
 	categoryRepo := repository.NewCategoryRepository(db)
 	categoryService := service.NewCategoryService(categoryRepo)
-	categoryHandler := admin.NewCategoryHandler(categoryService)
+	categoryHandler := handler.NewCategoryHandler(categoryService)
 
-	return categoryHandler
+	// Brand
+	brandRepo := repository.NewBrandRepository(db)
+	brandService := service.NewBrandService(brandRepo)
+	brandHandler := handler.NewBrandHandler(brandService)
+
+	return userHandler, productHandler, cartHandler, wishlistHandler, discountHandler, authHandler, categoryHandler, brandHandler
 }

@@ -8,6 +8,11 @@ import (
 type ProductService interface {
 	GetProducts() ([]model.Product, error)
 	GetProductByUUID(uuid string) (*model.Product, error)
+
+	// ADMIN
+	CreateNewProduct(product *model.Product) error
+	UpdateProduct(product *model.Product) error
+	DeleteProduct(uuid string) error // Optional: If you want to support deletion
 }
 
 type productService struct {
@@ -33,7 +38,29 @@ func (s *productService) GetProductByUUID(uuid string) (*model.Product, error) {
 	// 	return nil, err
 	// }
 
-	// return s.repo.GetProductByUUID(parsedUUID)
+	return s.repo.GetProductByUUID(uuid)
 
-	return nil, nil
+	// return nil, nil
+}
+
+// ADMIN
+func (s *productService) CreateNewProduct(product *model.Product) error {
+	if err := s.repo.CreateNewProduct(product); err != nil {
+		return err // Handle error if creation fails
+	}
+	return nil // Successfully created the product
+}
+
+func (s *productService) UpdateProduct(product *model.Product) error {
+	if err := s.repo.UpdateProduct(product); err != nil {
+		return err // Handle error if update fails
+	}
+	return nil // Successfully updated the product
+}
+
+func (s *productService) DeleteProduct(uuid string) error {
+	if err := s.repo.DeleteProduct(uuid); err != nil {
+		return err // Handle error if deletion fails
+	}
+	return nil // Successfully deleted the product
 }
